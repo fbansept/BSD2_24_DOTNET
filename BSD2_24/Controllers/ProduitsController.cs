@@ -22,9 +22,10 @@ namespace BSD2_24.Controllers
         // GET: Produits
         public async Task<IActionResult> Index(string StatusSelectionne, string recherche)
         {
-            
-            var requeteProduits = from p in _context.Produit
-                         select p;
+
+            var requeteProduits = _context.Produit
+                    .Include(p => p.Categorie)
+                    .AsQueryable();
 
             IQueryable<string> requeteStatus = from p in _context.Produit
                                             orderby p.Status
