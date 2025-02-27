@@ -4,6 +4,7 @@ using BSD2_24.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BSD2_24.Migrations
 {
     [DbContext(typeof(BSD2_24Context))]
-    partial class BSD2_24ContextModelSnapshot : ModelSnapshot
+    [Migration("20250227104532_AjoutStatusProduit")]
+    partial class AjoutStatusProduit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,23 +25,6 @@ namespace BSD2_24.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BSD2_24.Models.Categorie", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nom")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categorie");
-                });
-
             modelBuilder.Entity("BSD2_24.Models.Produit", b =>
                 {
                     b.Property<int>("Id")
@@ -46,9 +32,6 @@ namespace BSD2_24.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategorieId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DateDeSortie")
                         .HasColumnType("datetime2");
@@ -66,25 +49,7 @@ namespace BSD2_24.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategorieId");
-
                     b.ToTable("Produit");
-                });
-
-            modelBuilder.Entity("BSD2_24.Models.Produit", b =>
-                {
-                    b.HasOne("BSD2_24.Models.Categorie", "Categorie")
-                        .WithMany("Produits")
-                        .HasForeignKey("CategorieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Categorie");
-                });
-
-            modelBuilder.Entity("BSD2_24.Models.Categorie", b =>
-                {
-                    b.Navigation("Produits");
                 });
 #pragma warning restore 612, 618
         }

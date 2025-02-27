@@ -1,10 +1,26 @@
-﻿@model IEnumerable<BSD2_24.Models.Produit>
+﻿@model BSD2_24.Models.ProduitViewModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
+
+
+<form asp-controller="Produits" asp-action="Index" method="get">
+    <p>
+
+        <select asp-for="StatusSelectionne" asp-items="Model.Status">
+            <option value="">Filtrer par status</option>
+        </select>
+
+        <input type="text" 
+                name="recherche" 
+                placeholder="Ex : Nom du produit" 
+                value="@Html.DisplayFor(model => model.Recherche)"/>
+        <input class="btn btn-primary" type="submit" value="Rechercher" />
+    </p>
+</form>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,19 +29,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nom)
+                @Html.DisplayNameFor(model => model.Produits[0]!.Nom)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateDeSortie)
+                @Html.DisplayNameFor(model => model.Produits[0]!.DateDeSortie)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Prix)
+                @Html.DisplayNameFor(model => model.Produits[0]!.Prix)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Produits) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Nom)
