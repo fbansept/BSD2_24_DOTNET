@@ -54,7 +54,7 @@ namespace BSD2_24.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nom")] Produit produit)
+        public async Task<IActionResult> Create([Bind("Id,Nom,DateDeSortie,Prix")] Produit produit)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace BSD2_24.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nom")] Produit produit)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nom,DateDeSortie,Prix")] Produit produit)
         {
             if (id != produit.Id)
             {
