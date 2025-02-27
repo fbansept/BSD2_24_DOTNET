@@ -9,7 +9,7 @@ namespace BSD2_24.Models
         public int Id { get; set; }
         public string Nom { get; set; }
 
-        public string Status { get; set; }
+        public string? Status { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime? DateDeSortie { get; set; }
@@ -18,8 +18,10 @@ namespace BSD2_24.Models
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Prix { get; set; }
 
-        public int CategorieId { get; set; }
-        public Categorie Categorie { get; set; } = null!; 
+        public int? CategorieId { get; set; }
+
+
+        public Categorie? Categorie { get; set; } = null!; 
 
     }
 }

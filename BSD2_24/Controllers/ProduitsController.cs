@@ -82,7 +82,7 @@ namespace BSD2_24.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nom,DateDeSortie,Prix")] Produit produit)
+        public async Task<IActionResult> Create([Bind("Id,Nom,DateDeSortie,Prix,CategorieId")] Produit produit)
         {
             if (ModelState.IsValid)
             {
@@ -106,7 +106,20 @@ namespace BSD2_24.Controllers
             {
                 return NotFound();
             }
-            return View(produit);
+
+            var categories = _context.Categorie.ToList();
+
+            var categorieSelectList = categories.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.Nom
+            }).ToList();
+
+            return View(new EditProduitViewModel()
+            {
+                Produit = produit,
+                Categories = categorieSelectList
+            });
         }
 
         // POST: Produits/Edit/5
@@ -114,17 +127,21 @@ namespace BSD2_24.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nom,DateDeSortie,Prix")] Produit produit)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nom,DateDeSortie,Prix,CategorieId")] Produit produit)
         {
             if (id != produit.Id)
             {
                 return NotFound();
             }
 
+            var categories = _context.Categorie.ToList();
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    produit.Status = "FIXME";
+                    produit.Categorie = categories.Find(c => c.Id == produit.CategorieId);
                     _context.Update(produit);
                     await _context.SaveChangesAsync();
                 }
@@ -141,7 +158,18 @@ namespace BSD2_24.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(produit);
+
+            var categorieSelectList = categories.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.Nom
+            }).ToList();
+
+            return View(new EditProduitViewModel()
+            {
+                Produit = produit,
+                Categories = categorieSelectList
+            });
         }
 
         // GET: Produits/Delete/5
