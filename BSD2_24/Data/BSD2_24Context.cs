@@ -16,5 +16,6 @@ namespace BSD2_24.Data
 
         public DbSet<BSD2_24.Models.Produit> Produit { get; set; } = default!;
         public DbSet<BSD2_24.Models.Categorie> Categorie { get; set; } = default!;
+        public DbSet<BSD2_24.Models.Utilisateur> Utilisateur { get; set; } = default!;
     }
 }

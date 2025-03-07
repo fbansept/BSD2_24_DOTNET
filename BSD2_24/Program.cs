@@ -3,6 +3,22 @@ using Microsoft.Extensions.DependencyInjection;
 using BSD2_24.Data;
 using BSD2_24.Models;
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromDays(1);
+    options.IOTimeout = TimeSpan.FromDays(1); 
+    options.Cookie.Name = ".Ticket.Session";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.Path = "/";
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
+
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddDbContext<BSD2_24Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BSD2_24Context") ?? throw new InvalidOperationException("Connection string 'BSD2_24Context' not found.")));
 
@@ -28,6 +44,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
