@@ -74,6 +74,12 @@ namespace BSD2_24.Controllers
         // GET: Produits/Create
         public IActionResult Create()
         {
+            if(HttpContext.Session.GetString("SessionRole") == null 
+                || HttpContext.Session.GetString("SessionRole") != "Admin")
+            {
+                return StatusCode(403);
+            }
+
             return View();
         }
 
@@ -84,6 +90,12 @@ namespace BSD2_24.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nom,DateDeSortie,Prix,CategorieId")] Produit produit)
         {
+            if (HttpContext.Session.GetString("SessionRole") == null
+                || HttpContext.Session.GetString("SessionRole") != "Admin")
+            {
+                return StatusCode(403);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(produit);

@@ -1,6 +1,7 @@
 using BSD2_24.Data;
 using BSD2_24.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
@@ -12,7 +13,7 @@ namespace BSD2_24.Controllers
         private readonly BSD2_24Context _context;
 
         private string SessionUserName = "SessionUserName";
-        private string SessionUserId = "SessionUserId";
+        private string SessionRole = "SessionRole";
 
         public HomeController(ILogger<HomeController> logger, BSD2_24Context context)
         {
@@ -47,6 +48,9 @@ namespace BSD2_24.Controllers
         {
             if (ModelState.IsValid)
             {
+                utilisateur.Password = BCrypt.Net.BCrypt.HashPassword(utilisateur.Password);
+                utilisateur.Role = "Client";
+
                 _context.Add(utilisateur);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -76,18 +80,24 @@ namespace BSD2_24.Controllers
 
                 if (utilisateur.Email == null || utilisateur.Password == null)
                 {
-                    return NotFound();
+                    return View(utilisateur);
                 }
 
                 var utilisateurBdd = await _context.Utilisateur
-                    .FirstOrDefaultAsync(u => u.Email == utilisateur.Email && u.Password == utilisateur.Password);
+                    .FirstOrDefaultAsync(u => u.Email == utilisateur.Email);
 
                 if (utilisateurBdd == null)
                 {
-                    return NotFound();
+                    return View(utilisateur);
                 }
 
-                HttpContext.Session.SetString(SessionUserName, utilisateur.Email);
+                if (!BCrypt.Net.BCrypt.Verify(utilisateur.Password, utilisateurBdd.Password))
+                {
+                    return View(utilisateur);
+                }
+
+                HttpContext.Session.SetString(SessionUserName, utilisateurBdd.Email);
+                HttpContext.Session.SetString(SessionRole, utilisateurBdd.Role);
 
                 return RedirectToAction(nameof(Index));
             }
